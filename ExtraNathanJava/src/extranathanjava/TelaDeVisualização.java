@@ -35,6 +35,44 @@ public class TelaDeVisualização extends javax.swing.JFrame {
      */
     public TelaDeVisualização() {
         initComponents();{
+    private void aplicarFiltros() {
+    String nomeFiltro = filtroNome.getText().trim();
+    String sexoFiltro = sexoM.isSelected() ? "M" : sexoF.isSelected() ? "F" : "";
+    String ativoFiltro = ativoS.isSelected() ? "S" : ativoN.isSelected() ? "N" : "";
+
+    StringBuilder query = new StringBuilder("SELECT Id, Nome, Sexo, Ativo FROM usuarios WHERE 1=1");
+
+    if (!nomeFiltro.isEmpty()) {
+        query.append(" AND Nome LIKE '%").append(nomeFiltro).append("%'");
+    }
+    if (!sexoFiltro.isEmpty()) {
+        query.append(" AND Sexo = '").append(sexoFiltro).append("'");
+    }
+    if (!ativoFiltro.isEmpty()) {
+        query.append(" AND Ativo = '").append(ativoFiltro).append("'");
+    }
+
+    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/extranathan", "root", null);
+         Statement stmt = con.createStatement();
+         ResultSet rs = stmt.executeQuery(query.toString())) {
+
+        DefaultTableModel tableModel = (DefaultTableModel) ListaDePessoas.getModel();
+        tableModel.setRowCount(0); // Limpa a tabela
+
+        while (rs.next()) {
+            Object[] row = {
+                rs.getInt("Id"),
+                rs.getString("Nome"),
+                rs.getString("Sexo"),
+                rs.getString("Ativo")
+            };
+            tableModel.addRow(row);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
         class ButtonRenderer extends JButton implements TableCellRenderer {
 
     public ButtonRenderer() {
@@ -135,6 +173,15 @@ public class TelaDeVisualização extends javax.swing.JFrame {
         BtnDeslogar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         ListaDePessoas = new javax.swing.JTable();
+        filtroNome = new javax.swing.JTextField();
+        nomeFiltro = new javax.swing.JLabel();
+        sexoFiltro = new javax.swing.JLabel();
+        ativoLabel = new javax.swing.JLabel();
+        btnFiltrar = new javax.swing.JButton();
+        sexoM = new javax.swing.JRadioButton();
+        sexoF = new javax.swing.JRadioButton();
+        ativoS = new javax.swing.JRadioButton();
+        ativoN = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBounds(new java.awt.Rectangle(600, 300, 0, 0));
@@ -186,23 +233,93 @@ public class TelaDeVisualização extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(ListaDePessoas);
 
+        filtroNome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtroNomeActionPerformed(evt);
+            }
+        });
+
+        nomeFiltro.setText("Nome");
+
+        sexoFiltro.setText("Sexo");
+
+        ativoLabel.setText("Ativo");
+
+        btnFiltrar.setText("Filtrar");
+        btnFiltrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFiltrarActionPerformed(evt);
+            }
+        });
+
+        sexoM.setText("M");
+
+        sexoF.setText("F");
+
+        ativoS.setText("S");
+
+        ativoN.setText("N");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(BtnDeslogar)
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(nomeFiltro)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(sexoFiltro)
+                        .addGap(76, 76, 76)
+                        .addComponent(ativoLabel)
+                        .addGap(111, 111, 111)
+                        .addComponent(BtnDeslogar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(filtroNome, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(sexoM)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(sexoF)
+                        .addGap(40, 40, 40)
+                        .addComponent(ativoS)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ativoN)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(BtnDeslogar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(BtnDeslogar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(nomeFiltro)
+                            .addComponent(sexoFiltro)
+                            .addComponent(ativoLabel))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(filtroNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(sexoM)
+                                .addComponent(sexoF)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnFiltrar)
+                            .addComponent(ativoN)
+                            .addComponent(ativoS))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         pack();
@@ -217,6 +334,14 @@ public class TelaDeVisualização extends javax.swing.JFrame {
     private void ListaDePessoasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListaDePessoasMouseClicked
      // TODO add your handling code here:
     }//GEN-LAST:event_ListaDePessoasMouseClicked
+
+    private void filtroNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtroNomeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_filtroNomeActionPerformed
+
+    private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
+       aplicarFiltros();
+    }//GEN-LAST:event_btnFiltrarActionPerformed
     
     /**
      * @param args the command line arguments
@@ -257,6 +382,15 @@ public class TelaDeVisualização extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnDeslogar;
     public javax.swing.JTable ListaDePessoas;
+    private javax.swing.JLabel ativoLabel;
+    private javax.swing.JRadioButton ativoN;
+    private javax.swing.JRadioButton ativoS;
+    private javax.swing.JButton btnFiltrar;
+    private javax.swing.JTextField filtroNome;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel nomeFiltro;
+    private javax.swing.JRadioButton sexoF;
+    private javax.swing.JLabel sexoFiltro;
+    private javax.swing.JRadioButton sexoM;
     // End of variables declaration//GEN-END:variables
 }
