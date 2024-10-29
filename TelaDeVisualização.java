@@ -40,7 +40,8 @@ public class TelaDeVisualização extends javax.swing.JFrame {
      */
     public TelaDeVisualização() {
         initCustomComponents();
-        initComponents();{
+        initComponents();
+        addRadioButtonListeners();{
         class ButtonRenderer extends JButton implements TableCellRenderer {
 
     public ButtonRenderer() {
@@ -179,14 +180,40 @@ public class TelaDeVisualização extends javax.swing.JFrame {
         ButtonGroup ativoGroup = new ButtonGroup();
         ativoGroup.add(AtivoSim);
         ativoGroup.add(AtivoNao); }
+        
     
     private void addRadioButtonListeners() {
-        ActionListener filterListener = e -> filterTable();
-        SexoFeminino.addActionListener(filterListener);
-        SexoMasculino.addActionListener(filterListener);
-        AtivoSim.addActionListener(filterListener);
-        AtivoNao.addActionListener(filterListener);
-    }
+    // Listener para seleção de sexo
+    SexoMasculino.addActionListener(e -> {
+        if (SexoMasculino.isSelected()) {
+            SexoFeminino.setSelected(false); // Desmarca o botão oposto
+        }
+        filterTable(); // Atualiza a tabela com o filtro
+    });
+
+    SexoFeminino.addActionListener(e -> {
+        if (SexoFeminino.isSelected()) {
+            SexoMasculino.setSelected(false); // Desmarca o botão oposto
+        }
+        filterTable(); // Atualiza a tabela com o filtro
+    });
+
+    // Listener para seleção de ativo
+    AtivoSim.addActionListener(e -> {
+        if (AtivoSim.isSelected()) {
+            AtivoNao.setSelected(false); // Desmarca o botão oposto
+        }
+        filterTable(); // Atualiza a tabela com o filtro
+    });
+
+    AtivoNao.addActionListener(e -> {
+        if (AtivoNao.isSelected()) {
+            AtivoSim.setSelected(false); // Desmarca o botão oposto
+        }
+        filterTable(); // Atualiza a tabela com o filtro
+    });
+}
+
 
     private void filterTable() {
         String text = Pesquisa.getText();
@@ -461,5 +488,9 @@ searchField.getDocument().addDocumentListener(new DocumentListener() {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
+
+    private void configurarTabela() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
 }
