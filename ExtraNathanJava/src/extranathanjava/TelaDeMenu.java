@@ -108,9 +108,7 @@ public class TelaDeMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnVisualizarActionPerformed
 
     private void BtnCadAdminsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCadAdminsActionPerformed
-        TelaDeCadastroAdmin TelaAdmin = new TelaDeCadastroAdmin();
-        TelaAdmin.setVisible(true);
-        dispose();
+        // TODO add your handling code here:
     }//GEN-LAST:event_BtnCadAdminsActionPerformed
 
     private void BtnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCadastrarActionPerformed

@@ -19,10 +19,16 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -135,8 +141,11 @@ public class TelaDeVisualização extends javax.swing.JFrame {
         BtnDeslogar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         ListaDePessoas = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        Pesquisa = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
         setBounds(new java.awt.Rectangle(600, 300, 0, 0));
 
         BtnDeslogar.setText("Retorna");
@@ -186,12 +195,24 @@ public class TelaDeVisualização extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(ListaDePessoas);
 
+        jLabel1.setText("Pesquisa: ");
+
+        Pesquisa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PesquisaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(37, 37, 37)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Pesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(BtnDeslogar)
                 .addContainerGap())
             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
@@ -200,7 +221,10 @@ public class TelaDeVisualização extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(BtnDeslogar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BtnDeslogar)
+                    .addComponent(jLabel1)
+                    .addComponent(Pesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -217,6 +241,42 @@ public class TelaDeVisualização extends javax.swing.JFrame {
     private void ListaDePessoasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListaDePessoasMouseClicked
      // TODO add your handling code here:
     }//GEN-LAST:event_ListaDePessoasMouseClicked
+
+    private void PesquisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PesquisaActionPerformed
+        // TODO add your handling code here:
+        JTextField searchField = new JTextField(20); // Seu campo de pesquisa
+JTable table = new JTable(); // Sua tabela de usuários
+
+TableRowSorter<TableModel> rowSorter = new TableRowSorter<>(table.getModel());
+table.setRowSorter(rowSorter);
+
+searchField.getDocument().addDocumentListener(new DocumentListener() {
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        filterTable();
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        filterTable();
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        filterTable();
+    }
+
+    private void filterTable() {
+        String text = searchField.getText();
+        if (text.trim().length() == 0) {
+            rowSorter.setRowFilter(null);
+        } else {
+            rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+        }
+    }
+});
+
+    }//GEN-LAST:event_PesquisaActionPerformed
     
     /**
      * @param args the command line arguments
@@ -257,6 +317,8 @@ public class TelaDeVisualização extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnDeslogar;
     public javax.swing.JTable ListaDePessoas;
+    private javax.swing.JTextField Pesquisa;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
 }
