@@ -33,11 +33,26 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        erro = new javax.swing.JDialog();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         User = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         Password = new javax.swing.JPasswordField();
+
+        erro.setTitle("Erro de login.");
+        erro.setAlwaysOnTop(true);
+
+        javax.swing.GroupLayout erroLayout = new javax.swing.GroupLayout(erro.getContentPane());
+        erro.getContentPane().setLayout(erroLayout);
+        erroLayout.setHorizontalGroup(
+            erroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        erroLayout.setVerticalGroup(
+            erroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBounds(new java.awt.Rectangle(550, 300, 0, 0));
@@ -47,7 +62,7 @@ public class Main extends javax.swing.JFrame {
         jLabel1.setText("Usuario:");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel2.setText("Senha   :");
+        jLabel2.setText("Senha:");
 
         User.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -73,34 +88,31 @@ public class Main extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(19, Short.MAX_VALUE)
+                .addContainerGap(39, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(User, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-                    .addComponent(Password))
-                .addGap(110, 110, 110))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(117, 117, 117)
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addComponent(User, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Password, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(80, 80, 80))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(58, 58, 58)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(User)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
+                    .addComponent(jLabel1)
+                    .addComponent(User))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Password))
-                .addGap(26, 26, 26)
+                .addGap(19, 19, 19)
                 .addComponent(jButton1)
-                .addGap(30, 30, 30))
+                .addGap(38, 38, 38))
         );
 
         pack();
@@ -112,10 +124,10 @@ public class Main extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try{
-            String url = "jdbc:mysql://localhost:3306/teste_java";
+            String url = "jdbc:mysql://localhost:3306/teste2";
             Connection con = DriverManager.getConnection(url, "root", null);
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select exists (select * from extranathan.admins where Nome='"
+            ResultSet rs = stmt.executeQuery("select exists (select * from teste2.admins where Nome='"
                     +User.getText()+"' and Senha='"+Password.getText()+"')as resultado;");            
             if (rs.next()) {   //VER COM O PROFESSOR COMO USAR RECONHECIMENTO DE CARACTERS
                 if (rs.getInt("resultado") == 1){
@@ -124,6 +136,7 @@ public class Main extends javax.swing.JFrame {
                     dispose();
                 }  
             else {
+                    showErrorDialog("Usuário ou senha incorretos.");
         // Caso contrário, exibe uma mensagem de erro ou outra ação
         System.out.println("\nUsuario ou senha invalidos"); //fazer depois um JLabel para isso 
             }
@@ -180,10 +193,15 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPasswordField Password;
     public javax.swing.JTextField User;
+    private javax.swing.JDialog erro;
     public javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
+
+    private void showErrorDialog(String usuário_ou_senha_incorretos) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
 
 //NÃO ESQUECER DE DAR RS.CLOSE AO MUDAR DE TELA!!!
